@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use App\Listeners\SendWelcomeEmail;
+use App\Models\EventManagement\Events\MeetupEventCanceled;
 use App\Models\IdentityAndAccess\Events\UserRegistered;
+use App\UseCases\MeetupEvents\EventHandlers\SendCancelNotification;
+use App\UseCases\Payment\EventHandlers\RefundMeetupEventFee;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -20,8 +23,14 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
         UserRegistered::class => [
             SendWelcomeEmail::class
+        ],
+
+        MeetupEventCanceled::class => [
+            RefundMeetupEventFee::class,
+            SendCancelNotification::class
         ]
     ];
 
